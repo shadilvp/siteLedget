@@ -12,18 +12,19 @@ import fundRoutes from "./routes/fund.routes.js";
 import reportRoutes from "./routes/report.routes.js";
 
 dotenv.config();
+
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) => console.error("❌ DB Connection Error:", err));
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(errorHandler);
 
-// MongoDB connection
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ DB Connection Error:", err));
+
+
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -32,6 +33,9 @@ app.use("/api/sites", siteRoutes);
 app.use("/api/spendings", spendingRoutes); 
 app.use("/api/funds", fundRoutes);
 app.use("/api/reports", reportRoutes);
+
+
+app.use(errorHandler);
 
 
 // Start server
