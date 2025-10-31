@@ -4,6 +4,7 @@ import {
   getSiteById,
   updateSite,
   hardDeleteSite,
+  softDeleteSite,
 } from "../services/site.service.js";
 import AppError from "../utils/AppError.js";
 import { AppResponse } from "../utils/AppResponse.js";

@@ -6,6 +6,8 @@ import {
 } from "../services/auth.service.js";
 import AppError from "../utils/AppError.js";
 import { validateRegister, validateLogin } from "../models/company.model.js";
+import Company from "../models/company.model.js";
+
 
 // Register
 export const register = async (req, res, next) => {
@@ -23,15 +25,16 @@ export const register = async (req, res, next) => {
 // Login
 export const login = async (req, res, next) => {
   try {
+
     const { error } = validateLogin(req.body);
     if (error) throw new AppError(error.details[0].message, 400);
-
+    
     const { company, accessToken, refreshToken } = await loginCompany(req.body);
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 15 * 60 * 1000, 
+      maxAge: 24 * 60 * 60 * 1000, 
     });
 
     res.cookie("refreshToken", refreshToken, {
@@ -80,3 +83,22 @@ export const logout = async (req, res, next) => {
     next(err);
   }
 };
+
+//cr login
+export const logedComapny= async (req,res)=>{
+  try {
+    const comapnyId = req.company?.id
+    const company = await Company.findById(comapnyId).select("-password")
+    if(!company){
+        res.status(404).json({success:false ,message:"Company not found"})
+    }
+    res.status(200).json({success:true,message:"Company data fetched successfully",data:company})
+    
+  } catch (error) {
+
+    res.status(500).json({ success: false, message: "Server error" })
+    console.log(error);
+    
+    
+  }
+}

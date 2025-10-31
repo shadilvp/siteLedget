@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { decode } from "jsonwebtoken";
 import AppError from "../utils/AppError.js";
 
 export const authMiddleware = (req, res, next) => {
@@ -19,9 +19,16 @@ export const authMiddleware = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.company = decoded;
-    next();
+     jwt.verify(token, process.env.JWT_SECRET,(error,decode)=>{
+        if(error){
+          // console.log(error,"======");
+          return res.status(403).json({success:false,message:"Invalid token or expired"})          
+        }      
+        req.company = decode;  
+          
+        next();
+    });
+    
   } catch (err) {
     return next(new AppError("Invalid or expired token", 403));
   }
