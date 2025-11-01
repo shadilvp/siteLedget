@@ -22,6 +22,7 @@ export const register = async (req, res, next) => {
 
 // Login
 export const login = async (req, res, next) => {
+  console.log("Login request received");
   try {
     const { error } = validateLogin(req.body);
     if (error) throw new AppError(error.details[0].message, 400);

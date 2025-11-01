@@ -8,7 +8,8 @@ const siteSchema = new mongoose.Schema(
     description: String,
     initialBudget: { type: Number, required: true },
     currentBalance: { type: Number, required: true },
-    status: { type: String, enum: ["active", "inactive"], default: "active" }
+    status: { type: String, enum: ["active", "inactive"], default: "active" },
+    deletedAt: { type: Date, default: null }, // 👈 Add this
   },
   { timestamps: true }
 );
